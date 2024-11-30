@@ -1,0 +1,33 @@
+### GET all tasks
+GET http://localhost:3000/v1/tasks
+Content-Type: application/json
+Accept: application/json
+
+### GET task by id
+GET http://localhost:3000/v1/tasks/3
+Content-Type: application/json
+Accept: application/json
+
+### Create new task
+POST http://localhost:3000/v1/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "",
+  "description": "description of task 2"
+}
+
+### Update task
+PATCH http://localhost:3000/v1/tasks/3
+Content-Type: application/json
+Accept: application/json
+
+{
+  "status": "DONE"
+}
+
+### Delete task
+DELETE http://localhost:3000/v1/tasks/3
+Content-Type: application/json
+Accept: application/json
