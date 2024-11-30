@@ -51,7 +51,11 @@ export class TasksController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tasksService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    const task = this.tasksService.remove(+id);
+    if (task === undefined) {
+      throw new NotFoundException('task not found');
+    }
+    return task;
   }
 }
