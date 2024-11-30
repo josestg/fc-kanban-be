@@ -7,7 +7,7 @@ import { Task } from './entities/task.entity';
 export class TasksService {
   private tasks: Task[] = [
     {
-      Id: 1,
+      Id: 3,
       title: 'Task 1',
       description: 'This is task 1',
       status: 'TODO',
@@ -18,8 +18,11 @@ export class TasksService {
     },
   ];
 
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  create(dto: CreateTaskDto) {
+    const nextId = Math.max(...this.tasks.map((t) => t.Id)) + 1;
+    const task = new Task(nextId, dto.title, dto.description);
+    this.tasks.push(task);
+    return task;
   }
 
   findAll() {

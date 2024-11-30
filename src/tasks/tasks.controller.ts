@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Version,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -17,8 +19,9 @@ export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  @HttpCode(HttpStatus.OK)
+  create(@Body() dto: CreateTaskDto) {
+    return this.tasksService.create(dto);
   }
 
   @Version('1')

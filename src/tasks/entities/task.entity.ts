@@ -17,4 +17,16 @@ export class Task {
   createdAt: number; // unix timestamp in millisecond.
   updatedAt: number; // unix timestamp in millisecond.
   isDeleted: boolean;
+
+  constructor(id: number, title: string, description: string) {
+    const timestamp = Date.now();
+    this.Id = id;
+    this.title = title;
+    this.description = description;
+    this.status = 'TODO';
+    this.ownerId = -1;
+    this.isDeleted = false;
+    this.updatedAt = timestamp;
+    this.createdAt = timestamp;
+  }
 }
