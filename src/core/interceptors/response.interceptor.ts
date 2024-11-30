@@ -26,33 +26,38 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
     context: ExecutionContext,
     next: CallHandler<T>,
   ): Observable<Response<T>> {
-    return next.handle().pipe(
-      map((data) => {
-        const http = context.switchToHttp();
-        const code = http.getResponse().statusCode;
-        return {
-          code: code,
-          data: data,
-          text: code >= 400 ? 'failure' : 'success',
-        };
-      }),
-      catchError((err: Error) =>
-        throwError(() => {
-          const respErr: ResponseError = {
-            code: 500,
-            kind: err.name,
-            text: err.message,
-          };
-          if (err instanceof HttpException) {
-            respErr.code = err.getStatus();
-            const { message } = err.getResponse() as { message: any };
-            if (message) {
-              respErr.details = message;
-            }
-          }
-          throw new HttpException(respErr, respErr.code);
-        }),
-      ),
-    );
+    return next
+      .handle()
+      .pipe(map(this.handleSuccess(context)), catchError(this.handleFailure));
+  }
+
+  handleSuccess(context: ExecutionContext): (data: T) => Response<T> {
+    return (data: T) => {
+      const http = context.switchToHttp();
+      const code = http.getResponse().statusCode;
+      return {
+        code: code,
+        data: data,
+        text: code >= 400 ? 'failure' : 'success',
+      };
+    };
+  }
+
+  handleFailure(err: Error) {
+    return throwError(() => {
+      const respErr: ResponseError = {
+        code: 500,
+        kind: err.name,
+        text: err.message,
+      };
+      if (err instanceof HttpException) {
+        respErr.code = err.getStatus();
+        const { message } = err.getResponse() as { message: any };
+        if (message) {
+          respErr.details = message;
+        }
+      }
+      throw new HttpException(respErr, respErr.code);
+    });
   }
 }
