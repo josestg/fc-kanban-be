@@ -29,12 +29,29 @@ export class TasksService {
     return this.tasks;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  findOne(id: number): Task | undefined {
+    return this.tasks.find((t) => t.Id === id && !t.isDeleted);
   }
 
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  update(id: number, dto: UpdateTaskDto) {
+    const task = this.findOne(id);
+    console.log({ task, dto });
+    if (task !== undefined) {
+      if (dto.status) {
+        task.status = dto.status;
+      }
+
+      if (dto.title) {
+        task.title = dto.title;
+      }
+
+      if (dto.description) {
+        task.description = dto.description;
+      }
+
+      task.updatedAt = Date.now();
+    }
+    return task;
   }
 
   remove(id: number) {
