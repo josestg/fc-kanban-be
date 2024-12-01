@@ -5,11 +5,14 @@ import { TasksModule } from './tasks/tasks.module';
 import { CoreModule } from './core/core.module';
 import {  TypeOrmModule } from  '@nestjs/typeorm'
 import { Task } from "./tasks/entities/task.entity";
+import { UsersModule } from './users/users.module';
+import { User } from "./users/entities/user.entity";
 
 @Module({
   imports: [
     TasksModule,
     CoreModule,
+    UsersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -18,10 +21,12 @@ import { Task } from "./tasks/entities/task.entity";
       password: 'kanban-be',
       database: 'kanban-be',
       entities: [
-        Task
+        Task,
+        User,
       ],
       synchronize: true,
-    })
+    }),
+
   ],
   controllers: [AppController],
   providers: [AppService],
