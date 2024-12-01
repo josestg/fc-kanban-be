@@ -1,11 +1,12 @@
 import {
   CallHandler,
   ExecutionContext,
-  HttpException,
+  HttpException, HttpStatus,
   Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+  NestInterceptor
+} from "@nestjs/common";
 import { Observable, map, catchError, throwError } from 'rxjs';
+import { EntityNotFoundError } from "typeorm";
 
 type Response<T> = {
   code: number;
@@ -56,6 +57,11 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
         if (message) {
           respErr.details = message;
         }
+      }
+
+      if (err instanceof EntityNotFoundError) {
+        respErr.code = HttpStatus.NOT_FOUND;
+        respErr.text = "Not found";
       }
       throw new HttpException(respErr, respErr.code);
     });
