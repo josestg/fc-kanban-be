@@ -5,7 +5,7 @@ Accept: application/json
 
 {
   "name": "Bob Alex",
-  "email": "bob@alex.com",
+  "email": "bob123@alex.com",
   "password":"bob1234"
 }
 

@@ -10,7 +10,8 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
-} from '@nestjs/common';
+  UseGuards
+} from "@nestjs/common";
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -21,6 +22,7 @@ export class TasksController {
 
   @Post()
   @HttpCode(HttpStatus.OK)
+  // @UseGuards(AuthGuard)
   create(@Body() dto: CreateTaskDto) {
     return this.tasksService.create(dto);
   }

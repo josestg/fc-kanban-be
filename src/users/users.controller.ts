@@ -10,16 +10,17 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserLoggedDto } from './dto/user-logged.dto';
 import { QueryFailedError } from "typeorm";
 import { rethrow } from "@nestjs/core/helpers/rethrow";
 import { TokenDto } from "../auth/dto/token.dto";
+import { SkipAuth } from "../core/decorators/skipauth.decorator";
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('register')
+  @SkipAuth()
   async create(@Body() createUserDto: CreateUserDto) {
     try {
       return await this.usersService.create(createUserDto);
@@ -39,6 +40,7 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @SkipAuth()
   login(@Body() dto: LoginDto): Promise<TokenDto> {
     return this.usersService.login(dto);
   }
