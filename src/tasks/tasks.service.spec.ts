@@ -1,49 +1,60 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
-import { CreateTaskDto } from "./dto/create-task.dto";
+import { CreateTaskDto } from './dto/create-task.dto';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Task } from './entities/task.entity';
+import { Repository } from 'typeorm';
 
 describe('TasksService', () => {
   let service: TasksService;
+  let repository: Repository<Task>;
+
+  const dto: CreateTaskDto = {
+    title: 'task two',
+    description: 'this is task two',
+  };
+
+  const task = new Task(1, dto.title, dto.description);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TasksService],
+      providers: [
+        TasksService,
+        { provide: getRepositoryToken(Task), useClass: Repository<Task> },
+      ],
     }).compile();
 
     service = module.get<TasksService>(TasksService);
+    repository = module.get<Repository<Task>>(getRepositoryToken(Task));
   });
 
-  it('should be defined', () => {
+  it('service should be defined', () => {
     expect(service).toBeDefined();
   });
 
+  it('repository should be defined', () => {
+    expect(repository).toBeDefined();
+  });
+
   it('create should added new task', () => {
-    const dto: CreateTaskDto = {
-      title: 'task two',
-      description: 'this is task two'
-    }
+    jest
+      .spyOn(repository, 'save')
+      .mockImplementation((_: Task) => Promise.resolve(task));
 
-    const task = service.create(dto);
-    expect(task.Id).toBe(4);
-    expect(task.title).toBe(dto.title);
-    expect(task.description).toBe(dto.description);
-    expect(task.isDeleted).toBe(false);
-    expect(service.findAll()).toHaveLength(2);
-  })
+    expect(service.create(dto)).resolves.toBe(task);
+  });
 
-  it('create 2 tasks should added 2 tasks', () => {
-    const dto: CreateTaskDto = {
-      title: 'task two',
-      description: 'this is task two'
-    }
+  it('find one by id', () => {
+    jest
+      .spyOn(repository, 'findOneBy')
+      .mockImplementation(
+        (filters: { Id: number; isDeleted: boolean }): Promise<Task> => {
+          expect(filters.Id).toBe(task.Id);
+          expect(filters.isDeleted).toBe(false);
+          return Promise.resolve(task);
+        },
+      );
 
-    let task = service.create(dto);
-    expect(task.Id).toBe(4);
-
-    task = service.create(dto);
-    expect(task.Id).toBe(5);
-
-
-    expect(service.findAll()).toHaveLength(3);
-  })
+    expect(service.findOne(task.Id)).resolves.toBe(task);
+  });
 });
