@@ -13,6 +13,7 @@ import { LoginDto } from './dto/login.dto';
 import { UserLoggedDto } from './dto/user-logged.dto';
 import { QueryFailedError } from "typeorm";
 import { rethrow } from "@nestjs/core/helpers/rethrow";
+import { TokenDto } from "../auth/dto/token.dto";
 
 @Controller('users')
 export class UsersController {
@@ -38,7 +39,7 @@ export class UsersController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  login(@Body() dto: LoginDto): Promise<UserLoggedDto> {
+  login(@Body() dto: LoginDto): Promise<TokenDto> {
     return this.usersService.login(dto);
   }
 

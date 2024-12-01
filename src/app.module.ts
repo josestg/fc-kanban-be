@@ -7,12 +7,14 @@ import {  TypeOrmModule } from  '@nestjs/typeorm'
 import { Task } from "./tasks/entities/task.entity";
 import { UsersModule } from './users/users.module';
 import { User } from "./users/entities/user.entity";
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     TasksModule,
     CoreModule,
     UsersModule,
+    AuthModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -26,7 +28,6 @@ import { User } from "./users/entities/user.entity";
       ],
       synchronize: true,
     }),
-
   ],
   controllers: [AppController],
   providers: [AppService],

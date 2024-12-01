@@ -7,11 +7,14 @@ import * as bcrypt from "bcrypt"
 import { UserCreatedDto } from "./dto/user-created.dto";
 import { LoginDto } from "./dto/login.dto";
 import { UserLoggedDto } from "./dto/user-logged.dto";
+import { AuthService } from "../auth/auth.service";
+import { TokenDto } from "../auth/dto/token.dto";
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly authService: AuthService
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserCreatedDto> {
@@ -32,7 +35,7 @@ export class UsersService {
     });
   }
 
-  async login(dto: LoginDto): Promise<UserLoggedDto> {
+  async login(dto: LoginDto): Promise<TokenDto> {
     const usr = await this.userRepository.findOneBy({email: dto.email, isDeleted: false})
     if(!usr) {
       return null;
@@ -44,11 +47,7 @@ export class UsersService {
       return null;
     }
 
-    return {
-      id: usr.id,
-      name: usr.name,
-      email: usr.email
-    }
+    return this.authService.genToken(usr)
   }
 
   findOne(id: number) {
