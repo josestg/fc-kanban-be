@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 ### GET task by id
-GET http://localhost:3000/v1/tasks/3
+GET http://localhost:3000/v1/tasks/5
 Content-Type: application/json
 Accept: application/json
 
@@ -14,20 +14,20 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "",
-  "description": "description of task 2"
+  "title": "task test 2",
+  "description": "description of task test"
 }
 
 ### Update task
-PATCH http://localhost:3000/v1/tasks/3
+PATCH http://localhost:3000/v1/tasks/6
 Content-Type: application/json
 Accept: application/json
 
 {
-  "status": "DONE"
+  "status": "ON_PROGRESS"
 }
 
 ### Delete task
-DELETE http://localhost:3000/v1/tasks/3
+DELETE http://localhost:3000/v1/tasks/6
 Content-Type: application/json
 Accept: application/json
