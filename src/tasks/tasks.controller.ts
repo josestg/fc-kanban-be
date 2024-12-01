@@ -28,7 +28,7 @@ export class TasksController {
   @Version('1')
   @Get()
   async findAll() {
-    await new Promise((resolve) => setTimeout(resolve, 30000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     return this.tasksService.findAll();
   }
 
