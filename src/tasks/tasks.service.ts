@@ -11,22 +11,23 @@ export class TasksService {
     @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
-  create(dto: CreateTaskDto): Promise<Task> {
+  create(userId: number, dto: CreateTaskDto): Promise<Task> {
     const task = new Task(0, dto.title, dto.description);
+    task.ownerId = userId;
     return this.taskRepository.save(task);
   }
 
-  findAll(): Promise<Task[]> {
-    return this.taskRepository.findBy({ isDeleted: false });
+  findAll(userId: number): Promise<Task[]> {
+    return this.taskRepository.findBy({ isDeleted: false, ownerId: userId });
   }
 
-  findOne(id: number): Promise<Task | null> {
+  findOne(userId: number, id: number): Promise<Task | null> {
     // return this.taskRepository.findOneByOrFail({ Id: id, isDeleted: false });
-    return this.taskRepository.findOneBy({ Id: id, isDeleted: false });
+    return this.taskRepository.findOneBy({ Id: id, isDeleted: false, ownerId: userId });
   }
 
-  async update(id: number, dto: UpdateTaskDto): Promise<Task | null> {
-    return await this.findOne(id)
+  async update(userId: number, id: number, dto: UpdateTaskDto): Promise<Task | null> {
+    return await this.findOne(userId, id)
       .then((task: Task | null) => {
         if (task) {
           if (dto.status) {
@@ -47,8 +48,8 @@ export class TasksService {
       .then((task) => task ?  this.taskRepository.save(task) : null);
   }
 
-  async remove(id: number): Promise<Task | null> {
-    return this.findOne(id)
+  async remove(userId: number, id: number): Promise<Task | null> {
+    return this.findOne(userId, id)
       .then((task: Task | null) => {
         if (task) {
           task.isDeleted = true;

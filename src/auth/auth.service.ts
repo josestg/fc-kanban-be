@@ -32,7 +32,7 @@ export class AuthService {
       issuer: 'kanban-be',
     });
     return {
-      id: payload.id,
+      id: payload.sub,
       name: payload.name,
       email: payload.email
     }

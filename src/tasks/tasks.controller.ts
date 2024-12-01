@@ -10,11 +10,12 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
-  UseGuards
-} from "@nestjs/common";
+  Req,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { AuthRequest } from '../core/request/auth';
 
 @Controller('tasks')
 export class TasksController {
@@ -23,21 +24,20 @@ export class TasksController {
   @Post()
   @HttpCode(HttpStatus.OK)
   // @UseGuards(AuthGuard)
-  create(@Body() dto: CreateTaskDto) {
-    return this.tasksService.create(dto);
+  create(@Req() req: AuthRequest, @Body() dto: CreateTaskDto) {
+    return this.tasksService.create(req.authenticatedUser.id, dto);
   }
 
   @Version('1')
   @Get()
-  async findAll() {
+  async findAll(@Req() req: AuthRequest) {
     // await new Promise((resolve) => setTimeout(resolve, 3000));
-    return this.tasksService.findAll();
+    return this.tasksService.findAll(req.authenticatedUser.id);
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number) {
-    const task = await this.tasksService.findOne(id);
-    console.log(task)
+  async findOne(@Req() req: AuthRequest, @Param('id') id: number) {
+    const task = await this.tasksService.findOne(req.authenticatedUser.id, id);
     if (!task) {
       throw new NotFoundException('task not found');
     }
@@ -45,8 +45,8 @@ export class TasksController {
   }
 
   @Patch(':id')
-  async update(@Param('id') id: number, @Body() dto: UpdateTaskDto) {
-    const task = await this.tasksService.update(id, dto);
+  async update(@Req() req: AuthRequest, @Param('id') id: number, @Body() dto: UpdateTaskDto) {
+    const task = await this.tasksService.update(req.authenticatedUser.id, id, dto);
     if (!task) {
       throw new NotFoundException('task not found');
     }
@@ -54,8 +54,8 @@ export class TasksController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number) {
-    const task = await this.tasksService.remove(+id);
+  async remove(@Req() req: AuthRequest, @Param('id') id: number) {
+    const task = await this.tasksService.remove(req.authenticatedUser.id, id);
     if (!task) {
       throw new NotFoundException('task not found');
     }

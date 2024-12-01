@@ -2,11 +2,13 @@
 GET http://localhost:3000/v1/tasks
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6ImUxMDMwMGVjLTUxMGUtNDBiNy1iMzM5LTYxYjlkNjA0ODNhMiIsInN1YiI6MTksIm5hbWUiOiJCb2IgQWxleCIsImVtYWlsIjoiYm9iQGFsZXguY29tIiwiaWF0IjoxNzMzMDcwMzQ3LCJleHAiOjE3MzMwNzM5NDcsImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.ZEHtdM3sOCbnoERPsrPMgZvTIUlzy9FRjlhQdVW7uCI
 
 ### GET task by id
-GET http://localhost:3000/v1/tasks/123
+GET http://localhost:3000/v1/tasks/18
 Content-Type: application/json
 Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6ImUxMDMwMGVjLTUxMGUtNDBiNy1iMzM5LTYxYjlkNjA0ODNhMiIsInN1YiI6MTksIm5hbWUiOiJCb2IgQWxleCIsImVtYWlsIjoiYm9iQGFsZXguY29tIiwiaWF0IjoxNzMzMDcwMzQ3LCJleHAiOjE3MzMwNzM5NDcsImF1ZCI6ImthbmJhbi1iZSIsImlzcyI6ImthbmJhbi1iZSJ9.ZEHtdM3sOCbnoERPsrPMgZvTIUlzy9FRjlhQdVW7uCI
 
 ### Create new task
 POST http://localhost:3000/v1/tasks
@@ -16,7 +18,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3RpZCI6ImUxMDMwM
 
 {
   "title": "task test 2",
-  "description": "description of task test"
+  "description": "description of task 2"
 }
 
 ### Update task

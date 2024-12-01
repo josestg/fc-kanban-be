@@ -5,10 +5,19 @@ import { Task } from './entities/task.entity';
 import { NotFoundException } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import  {AuthRequest} from "../core/request/auth"
 
 describe('TasksController', () => {
   let controller: TasksController;
   let service: TasksService;
+
+  const request: AuthRequest = {
+    authenticatedUser: {
+      id: 42,
+      name: 'Bob',
+      email: 'bob@mail.com',
+    },
+  } as any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,7 +45,7 @@ describe('TasksController', () => {
       .spyOn(service, 'findAll')
       .mockImplementation(() => Promise.resolve([] as Task[]));
 
-    const tasks = controller.findAll();
+    const tasks = controller.findAll(request);
     expect(tasks).resolves.toHaveLength(0);
   });
 
@@ -50,7 +59,7 @@ describe('TasksController', () => {
       .spyOn(service, 'findAll')
       .mockImplementation(() => Promise.resolve(tasks));
 
-    const actual = await controller.findAll();
+    const actual = await controller.findAll(request);
     expect(actual).toBe(tasks);
   });
 
@@ -63,7 +72,7 @@ describe('TasksController', () => {
         return Promise.resolve(task);
       });
 
-    const actual = controller.findOne(42);
+    const actual = controller.findOne(request, 42);
     expect(actual).resolves.toBe(task);
   });
 
@@ -75,6 +84,6 @@ describe('TasksController', () => {
         return Promise.resolve(null);
       });
 
-    expect(controller.findOne(42)).rejects.toThrow(NotFoundException);
+    expect(controller.findOne(request, 42)).rejects.toThrow(NotFoundException);
   });
 });

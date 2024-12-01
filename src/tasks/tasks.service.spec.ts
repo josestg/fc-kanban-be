@@ -14,6 +14,7 @@ describe('TasksService', () => {
     description: 'this is task two',
   };
 
+  const ownerId = 42;
   const task = new Task(1, dto.title, dto.description);
 
   beforeEach(async () => {
@@ -26,6 +27,7 @@ describe('TasksService', () => {
 
     service = module.get<TasksService>(TasksService);
     repository = module.get<Repository<Task>>(getRepositoryToken(Task));
+    task.ownerId = ownerId;
   });
 
   it('service should be defined', () => {
@@ -41,7 +43,7 @@ describe('TasksService', () => {
       .spyOn(repository, 'save')
       .mockImplementation((_: Task) => Promise.resolve(task));
 
-    expect(service.create(dto)).resolves.toBe(task);
+    expect(service.create(ownerId, dto)).resolves.toBe(task);
   });
 
   it('find one by id', () => {
@@ -55,6 +57,6 @@ describe('TasksService', () => {
         },
       );
 
-    expect(service.findOne(task.Id)).resolves.toBe(task);
+    expect(service.findOne(ownerId, task.Id)).resolves.toBe(task);
   });
 });
