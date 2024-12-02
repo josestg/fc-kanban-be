@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from "@nestjs/common";
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
@@ -7,11 +7,14 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TasksService {
+  private readonly logger = new Logger(TasksService.name);
+
   constructor(
     @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
   create(userId: number, dto: CreateTaskDto): Promise<Task> {
+    this.logger.debug(`user: ${userId} create a new task: ${dto.title}`)
     const task = new Task(0, dto.title, dto.description);
     task.ownerId = userId;
     return this.taskRepository.save(task);
