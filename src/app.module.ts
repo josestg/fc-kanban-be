@@ -20,7 +20,10 @@ import { JwtModule } from '@nestjs/jwt';
     AuthModule,
     ConfigModule.forRoot({
       load: [config],
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: [
+        '.env'
+      ]
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

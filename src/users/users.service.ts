@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import * as bcrypt from "bcrypt"
 import { UserCreatedDto } from "./dto/user-created.dto";
 import { LoginDto } from "./dto/login.dto";
-import { UserLoggedDto } from "./dto/user-logged.dto";
 import { AuthService } from "../auth/auth.service";
 import { TokenDto } from "../auth/dto/token.dto";
 
